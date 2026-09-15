@@ -8,6 +8,7 @@ class EmbeddingService:
     def __init__(self, model_name: str = "all-MiniLM-L6-v2"):
         self.model_name = model_name
         self._model = None
+        self._query_cache: dict[str, List[float]] = {}
 
     @property
     def model(self):
@@ -21,10 +22,14 @@ class EmbeddingService:
         return self._model
 
     def embed_query(self, text: str) -> List[float]:
+        if text in self._query_cache:
+            return self._query_cache[text]
         if self.model:
-            vector = self.model.encode(text, convert_to_numpy=True)
-            return vector.tolist()
-        return self._pseudo_embed(text)
+            vector = self.model.encode(text, convert_to_numpy=True).tolist()
+        else:
+            vector = self._pseudo_embed(text)
+        self._query_cache[text] = vector
+        return vector
 
     def embed_documents(self, texts: List[str]) -> List[List[float]]:
         if self.model:

@@ -16,6 +16,15 @@ from backend.app.api.routes_crops import router as crops_router
 async def lifespan(app: FastAPI):
     # Initialize DB schema
     init_db()
+    # Pre-warm RAG vector store and sentence transformer model on boot
+    try:
+        from backend.app.rag.embeddings import embedding_service
+        from backend.app.rag.vector_store import vector_store
+        _ = embedding_service.model
+        _ = vector_store.search("soil pH nutrient fertility", top_k=1)
+    except Exception as e:
+        import logging
+        logging.getLogger(__name__).warning(f"RAG warmup warning: {e}")
     yield
 
 app = FastAPI(

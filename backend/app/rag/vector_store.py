@@ -10,7 +10,11 @@ from backend.app.rag.embeddings import embedding_service
 logger = logging.getLogger(__name__)
 
 class VectorStore:
+    def __init__(self):
+        self._cached_chunks = None
+
     def add_chunks(self, chunks: List[Dict[str, Any]]):
+        self._cached_chunks = None
         db: Session = SessionLocal()
         try:
             texts = [c["content"] for c in chunks]
@@ -65,17 +69,21 @@ class VectorStore:
         top_k: int = 3,
         threshold: float = 0.35
     ) -> List[Dict[str, Any]]:
-        db: Session = SessionLocal()
-        try:
-            query_emb = np.array(embedding_service.embed_query(query), dtype=np.float32)
-            query_norm = np.linalg.norm(query_emb)
-            if query_norm > 0:
-                query_emb = query_emb / query_norm
+        if self._cached_chunks is None:
+            db: Session = SessionLocal()
+            try:
+                self._cached_chunks = db.query(KnowledgeChunkModel).all()
+            finally:
+                db.close()
 
-            db_query = db.query(KnowledgeChunkModel)
-            all_chunks = db_query.all()
-            if not all_chunks:
-                return []
+        all_chunks = self._cached_chunks
+        if not all_chunks:
+            return []
+
+        query_emb = np.array(embedding_service.embed_query(query), dtype=np.float32)
+        query_norm = np.linalg.norm(query_emb)
+        if query_norm > 0:
+            query_emb = query_emb / query_norm
 
             scored_chunks = []
             for chunk in all_chunks:
@@ -115,7 +123,5 @@ class VectorStore:
             scored_chunks.sort(key=lambda x: x["score"], reverse=True)
             filtered = [c for c in scored_chunks if c["score"] >= threshold]
             return filtered[:top_k]
-        finally:
-            db.close()
 
 vector_store = VectorStore()

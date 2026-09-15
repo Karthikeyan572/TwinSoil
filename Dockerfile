@@ -28,7 +28,8 @@ COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 ENV PYTHONPATH=/app
 ENV PORT=10000
 
-# Pre-train crop ML classifier and ingest agricultural RAG knowledge base
+# Pre-train crop ML classifier, cache sentence-transformers weights, and ingest agricultural RAG knowledge base
+RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2')" || true
 RUN python -m backend.ml.train_crop_model || true
 RUN python -m backend.app.rag.ingestion || true
 
