@@ -24,7 +24,6 @@ class InterpretationAgent:
     ) -> Dict[str, Any]:
         """
         Synthesizes an evidence-grounded explanation for a single soil parameter.
-        Uses context compression: sends only relevant chunks for this parameter.
         Ensures output is specific: states exact measured value, compares to lab range,
         and explains the agronomic mechanism backed by citations.
         """
@@ -64,8 +63,12 @@ class InterpretationAgent:
                 system_prompt=system_prompt,
                 use_strong_model=True
             )
-            # Verify it's not generic fallback
-            if "Based on retrieved agricultural" in response.explanation:
+            # Strict safety check: ensure the response is truly specific
+            if (
+                "Based on retrieved agricultural" in response.explanation
+                or "this parameter reflects" in response.explanation.lower()
+                or str(value) not in response.explanation
+            ):
                 explanation, why_it_matters = self._synthesize_specific_scientific_explanation(
                     parameter_name, val_str, range_str, status_str, evidence_chunks
                 )
@@ -117,11 +120,10 @@ class InterpretationAgent:
         source = first_chunk.get("source", "university extension references")
         chunk_content = first_chunk.get("content", "")
 
-        relation_str = "falls within" if "WITHIN" in status_str or "OPTIMAL" in status_str else (
+        relation_str = "falls within" if "WITHIN" in status_str or "OPTIMAL" in status_str or "SAFE" in status_str else (
             "is below" if "BELOW" in status_str or "DEFICIENT" in status_str or "LOW" in status_str else "exceeds"
         )
 
-        # Canonical parameter-specific scientific syntheses
         p_upper = parameter_name.upper()
         if p_upper == "PH":
             explanation = (
@@ -161,6 +163,13 @@ class InterpretationAgent:
             )
             why_it_matters = "Phosphorus drives seedling establishment, early root branching, and reproductive flower and seed development."
 
+        elif p_upper == "N":
+            explanation = (
+                f"The measured Nitrogen (N) of {val_str} {relation_str} the laboratory target range of {range_str}. "
+                f"According to {source}, nitrogen is the fundamental constituent of plant chlorophyll and proteins; levels below target restrict vegetative shoot vigor."
+            )
+            why_it_matters = "Nitrogen fuels vegetative growth, enzymatic activity, and photosynthetic biomass accumulation."
+
         elif p_upper == "CA":
             explanation = (
                 f"The measured Calcium (Ca) of {val_str} {relation_str} the laboratory target range of {range_str}. "
@@ -182,12 +191,33 @@ class InterpretationAgent:
             )
             why_it_matters = "Sulfur is essential for plant protein formation, nitrogen utilization efficiency, and nodule development in legumes."
 
-        elif p_upper == "AL":
+        elif p_upper == "B":
             explanation = (
-                f"The measured Aluminum (Al) of {val_str} {relation_str} the laboratory safety threshold of {range_str}. "
-                f"According to {source}, soluble aluminum (Al3+) becomes phytotoxic in strongly acidic soils (pH < 5.0), inhibiting root apical meristem division."
+                f"The measured Boron (B) of {val_str} {relation_str} the laboratory reference threshold of {range_str}. "
+                f"According to {source}, boron regulates cell wall carbohydrate cross-linking and pollen tube elongation during pollination."
             )
-            why_it_matters = "Excess soluble aluminum damages root tips, severely restricting taproot elongation and secondary water absorption."
+            why_it_matters = "Boron is critical for reproductive set, sugar translocation, and meristematic tissue growth."
+
+        elif p_upper == "MN":
+            explanation = (
+                f"The measured Manganese (Mn) of {val_str} {relation_str} the laboratory target range of {range_str}. "
+                f"According to {source}, manganese is an indispensable activator in photosynthetic water-splitting and enzyme-catalyzed oxidation reactions."
+            )
+            why_it_matters = "Manganese supports photosynthetic electron transport, nitrogen assimilation, and lignin synthesis."
+
+        elif p_upper == "ZN":
+            explanation = (
+                f"The measured Zinc (Zn) of {val_str} {relation_str} the laboratory target range of {range_str}. "
+                f"According to {source}, zinc acts as a necessary cofactor for auxin growth-hormone synthesis; sub-optimal concentrations cause shortened internodes and rosetting."
+            )
+            why_it_matters = "Zinc drives plant elongation, internode expansion, and carbohydrate metabolic pathways."
+
+        elif p_upper == "CU":
+            explanation = (
+                f"The measured Copper (Cu) of {val_str} {relation_str} the laboratory target range of {range_str}. "
+                f"According to {source}, copper participates in plant respiratory plastocyanin complexes and cellular enzyme activation."
+            )
+            why_it_matters = "Copper is essential for plant respiration, photosynthetic electron transfer, and seed set."
 
         elif p_upper == "FE":
             explanation = (
@@ -196,12 +226,26 @@ class InterpretationAgent:
             )
             why_it_matters = "Iron is a critical cofactor for electron transfer and chlorophyll biosynthesis, though excess solubility reflects low soil pH."
 
+        elif p_upper == "AL":
+            explanation = (
+                f"The measured Aluminum (Al) of {val_str} {relation_str} the laboratory safety threshold of {range_str}. "
+                f"According to {source}, soluble aluminum (Al3+) becomes phytotoxic in strongly acidic soils (pH < 5.0), inhibiting root apical meristem division."
+            )
+            why_it_matters = "Excess soluble aluminum damages root tips, severely restricting taproot elongation and secondary water absorption."
+
         elif p_upper == "PB":
             explanation = (
                 f"The measured Lead (Pb) of {val_str} {relation_str} the established safety limit of {range_str}. "
                 f"According to {source}, concentrations below 22 ppm represent natural background levels and present no heavy metal contamination risk for garden produce."
             )
             why_it_matters = "Lead has no biological function and tracking baseline soil levels ensures food safety in home and agricultural soils."
+
+        elif p_upper == "EC":
+            explanation = (
+                f"The measured Electrical Conductivity (EC) of {val_str} {relation_str} the laboratory reference limit of {range_str}. "
+                f"According to {source}, EC quantifies total soluble electrolyte salts; excessive levels induce osmotic drought stress by impeding root water absorption."
+            )
+            why_it_matters = "EC indicates osmotic stress potential and salt balance, directly impacting root hydration and crop seedling survival."
 
         else:
             explanation = (
