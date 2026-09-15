@@ -15,6 +15,7 @@ export interface SoilParameter {
   reference_text?: string | null;
   lab_status?: string | null;
   computed_status?: string | null;
+  status?: string | null;
   explanation?: string;
   why_it_matters?: string;
   confidence?: string;

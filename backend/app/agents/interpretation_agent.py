@@ -20,7 +20,9 @@ class InterpretationAgent:
         reference_text: Optional[str],
         lab_status: Optional[str],
         computed_status: Optional[str],
-        evidence_chunks: List[Dict[str, Any]]
+        evidence_chunks: List[Dict[str, Any]],
+        reference_min: Optional[float] = None,
+        reference_max: Optional[float] = None
     ) -> Dict[str, Any]:
         """
         Synthesizes an evidence-grounded explanation for a single soil parameter.
@@ -97,6 +99,11 @@ class InterpretationAgent:
             "name": parameter_name,
             "value": value,
             "unit": unit,
+            "reference_min": reference_min,
+            "reference_max": reference_max,
+            "reference_text": reference_text,
+            "lab_status": lab_status,
+            "computed_status": computed_status,
             "status": computed_status or lab_status or "UNKNOWN",
             "explanation": explanation,
             "why_it_matters": why_it_matters,

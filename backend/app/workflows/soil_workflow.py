@@ -117,7 +117,9 @@ def analyze_parameters_node(state: SoilAnalysisState) -> Dict[str, Any]:
                 reference_text=param.reference_text,
                 lab_status=param.lab_status,
                 computed_status=param.computed_status,
-                evidence_chunks=evidence_chunks
+                evidence_chunks=evidence_chunks,
+                reference_min=param.reference_min,
+                reference_max=param.reference_max
             )
 
             # Step 3c: Critic Agent validation

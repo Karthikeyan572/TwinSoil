@@ -34,22 +34,22 @@ export const ParameterCard: React.FC<ParameterCardProps> = ({ parameter, onSelec
               Lab Range: {rangeText}
             </span>
           </div>
-          <StatusBadge status={parameter.lab_status || parameter.computed_status} />
+          <StatusBadge status={parameter.lab_status || parameter.computed_status || parameter.status} />
         </div>
 
         <div className="my-4">
           <div className="text-2xl font-extrabold text-stone-900 tracking-tight">
             {displayValue}
           </div>
-          {parameter.computed_status && parameter.lab_status && parameter.computed_status !== parameter.lab_status && (
+          {(parameter.computed_status || parameter.status) && (
             <div className="text-xs text-stone-500 mt-1">
-              Verified: <span className="font-medium text-stone-700">{parameter.computed_status.replace(/_/g, ' ')}</span>
+              Verified: <span className="font-medium text-stone-700">{(parameter.computed_status || parameter.status || '').replace(/_/g, ' ')}</span>
             </div>
           )}
         </div>
 
         {parameter.explanation && (
-          <p className="text-xs text-stone-600 line-clamp-2 mt-2 leading-relaxed">
+          <p className="text-xs text-stone-600 line-clamp-3 mt-2 leading-relaxed min-h-[3rem]">
             {parameter.explanation}
           </p>
         )}
