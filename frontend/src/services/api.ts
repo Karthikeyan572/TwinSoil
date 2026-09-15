@@ -381,12 +381,17 @@ export const api = {
     };
   },
 
-  async askSoilAi(reportId: string, question: string): Promise<ChatResponse> {
+  async askSoilAi(reportId: string, question: string, geminiApiKey?: string): Promise<ChatResponse> {
     try {
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (geminiApiKey) {
+        headers['X-Gemini-API-Key'] = geminiApiKey;
+      }
+
       const res = await fetch(`${API_BASE}/reports/${reportId}/ask`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question }),
+        headers,
+        body: JSON.stringify({ question, gemini_api_key: geminiApiKey || undefined }),
       });
 
       if (res.ok) {

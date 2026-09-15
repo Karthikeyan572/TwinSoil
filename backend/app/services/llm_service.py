@@ -38,11 +38,20 @@ class LLMService:
         system_prompt: Optional[str] = None,
         use_strong_model: bool = False,
         temperature: float = 0.2,
+        gemini_api_key: Optional[str] = None,
     ) -> str:
+        key = gemini_api_key or settings.GEMINI_API_KEY
+        if key:
+            try:
+                model = settings.STRONG_MODEL if use_strong_model else (
+                    settings.FAST_MODEL if "gemini" in settings.FAST_MODEL else "gemini-1.5-flash"
+                )
+                return self._call_gemini_text(prompt, system_prompt, model, temperature, api_key=key)
+            except Exception as e:
+                logger.warning(f"Gemini API call failed: {e}. Falling back to evidence-grounded responder.")
+
         if self.provider == "openai" and settings.OPENAI_API_KEY:
             return self._call_openai_text(prompt, system_prompt, self.strong_model if use_strong_model else self.fast_model, temperature)
-        elif self.provider == "gemini" and settings.GEMINI_API_KEY:
-            return self._call_gemini_text(prompt, system_prompt, self.strong_model if use_strong_model else self.fast_model, temperature)
         else:
             return self._mock_text_response(prompt)
 
@@ -111,21 +120,30 @@ class LLMService:
         data = response.json()
         return data["choices"][0]["message"]["content"]
 
-    def _call_gemini_text(self, prompt, system_prompt, model_name, temp):
+    def _call_gemini_text(self, prompt, system_prompt, model_name, temp, api_key=None):
         import httpx
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={settings.GEMINI_API_KEY}"
-        parts = []
-        if system_prompt:
-            parts.append({"text": system_prompt})
-        parts.append({"text": prompt})
+        key = api_key or settings.GEMINI_API_KEY
+        target_model = model_name if "gemini" in model_name else "gemini-1.5-flash"
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{target_model}:generateContent?key={key}"
 
         payload = {
-            "contents": [{"parts": parts}],
+            "contents": [
+                {
+                    "role": "user",
+                    "parts": [{"text": prompt}]
+                }
+            ],
             "generationConfig": {
                 "temperature": temp,
+                "maxOutputTokens": 1024,
             },
         }
-        response = httpx.post(url, json=payload, timeout=45.0)
+        if system_prompt:
+            payload["system_instruction"] = {
+                "parts": [{"text": system_prompt}]
+            }
+
+        response = httpx.post(url, json=payload, timeout=35.0)
         response.raise_for_status()
         data = response.json()
         return data["candidates"][0]["content"]["parts"][0]["text"]

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Sparkles, Send, BookOpen, CheckCircle2, Loader2, Bot, User } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Sparkles, Send, BookOpen, CheckCircle2, Loader2, Bot, User, Key, Check, ExternalLink } from 'lucide-react';
 import { ReportAnalysis, ChatResponse } from '../types';
 import { api } from '../services/api';
 
@@ -11,13 +11,22 @@ interface Message {
   role: 'user' | 'assistant';
   content: string;
   citations?: { source: string; page?: number | null; text: string }[];
+  provider?: string;
 }
 
 export const AskSoilAIPage: React.FC<AskSoilAIPageProps> = ({ analysis }) => {
+  const [geminiApiKey, setGeminiApiKey] = useState<string>(() => {
+    return localStorage.getItem('twinsoil_gemini_api_key') || '';
+  });
+  const [showKeyConfig, setShowKeyConfig] = useState(false);
+  const [tempKey, setTempKey] = useState(geminiApiKey);
+  const [savedNotice, setSavedNotice] = useState(false);
+
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: `Hello! I have analyzed your soil report (ID: ${analysis.report_id}). You can ask me any specific agronomic questions regarding your measured parameters, nutrient deficiencies, pH levels, or soil amendments. My answers are strictly grounded in authoritative university extension science.`,
+      content: `Hello! I am SoilTwin AI powered by Google Gemini and authoritative university extension RAG. I have analyzed your report (ID: ${analysis.report_id}). You can ask me any agronomic questions regarding your measured parameters, nutrient deficiencies, pH levels, or soil amendments.`,
+      provider: geminiApiKey ? 'Google Gemini 1.5 Flash' : 'SoilTwin Scientific Engine',
     },
   ]);
   const [input, setInput] = useState('');
@@ -29,6 +38,21 @@ export const AskSoilAIPage: React.FC<AskSoilAIPageProps> = ({ analysis }) => {
     'How does organic matter affect water retention in my soil?',
   ];
 
+  const handleSaveKey = () => {
+    const trimmed = tempKey.trim();
+    setGeminiApiKey(trimmed);
+    if (trimmed) {
+      localStorage.setItem('twinsoil_gemini_api_key', trimmed);
+    } else {
+      localStorage.removeItem('twinsoil_gemini_api_key');
+    }
+    setSavedNotice(true);
+    setTimeout(() => {
+      setSavedNotice(false);
+      setShowKeyConfig(false);
+    }, 1200);
+  };
+
   const handleSend = async (questionText?: string) => {
     const q = (questionText || input).trim();
     if (!q || loading) return;
@@ -39,11 +63,12 @@ export const AskSoilAIPage: React.FC<AskSoilAIPageProps> = ({ analysis }) => {
     setLoading(true);
 
     try {
-      const res: ChatResponse = await api.askSoilAi(analysis.report_id, q);
+      const res: ChatResponse = await api.askSoilAi(analysis.report_id, q, geminiApiKey);
       const assistantMsg: Message = {
         role: 'assistant',
         content: res.answer,
         citations: res.citations,
+        provider: res.provider || (geminiApiKey ? 'Google Gemini 1.5 Flash' : 'SoilTwin Scientific Engine'),
       };
       setMessages((prev) => [...prev, assistantMsg]);
     } catch (err: any) {
@@ -52,6 +77,7 @@ export const AskSoilAIPage: React.FC<AskSoilAIPageProps> = ({ analysis }) => {
         {
           role: 'assistant',
           content: 'Sorry, I encountered an error while consulting the agricultural knowledge base.',
+          provider: 'Error Fallback',
         },
       ]);
     } finally {
@@ -62,9 +88,9 @@ export const AskSoilAIPage: React.FC<AskSoilAIPageProps> = ({ analysis }) => {
   return (
     <div className="py-6 max-w-4xl mx-auto space-y-6">
       {/* Header Banner */}
-      <div className="bg-white border border-stone-200 rounded-3xl p-6 shadow-xs flex items-center justify-between">
+      <div className="bg-white border border-stone-200 rounded-3xl p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center">
+          <div className="w-10 h-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
             <Sparkles className="w-5 h-5" />
           </div>
           <div>
@@ -74,7 +100,61 @@ export const AskSoilAIPage: React.FC<AskSoilAIPageProps> = ({ analysis }) => {
             </p>
           </div>
         </div>
+
+        <div className="flex items-center space-x-2">
+          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+            <span className="w-2 h-2 rounded-full mr-1.5 bg-emerald-500 animate-pulse"></span>
+            Google Gemini 1.5 Flash
+          </span>
+          <button
+            onClick={() => setShowKeyConfig(!showKeyConfig)}
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl border border-stone-200 hover:border-stone-400 text-xs font-medium text-stone-700 bg-stone-50 hover:bg-stone-100 transition cursor-pointer"
+          >
+            <Key className="w-3.5 h-3.5 text-stone-500" />
+            <span>{geminiApiKey ? 'Key Configured' : 'Set Gemini Key'}</span>
+          </button>
+        </div>
       </div>
+
+      {/* Gemini API Key Config Drawer */}
+      {showKeyConfig && (
+        <div className="bg-white border border-stone-200 rounded-2xl p-4 shadow-sm space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2 text-xs font-bold text-stone-800">
+              <Key className="w-4 h-4 text-emerald-600" />
+              <span>Google Gemini API Key</span>
+            </div>
+            <a
+              href="https://aistudio.google.com/app/apikey"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[11px] text-emerald-600 hover:underline flex items-center space-x-1"
+            >
+              <span>Get free key</span>
+              <ExternalLink className="w-3 h-3" />
+            </a>
+          </div>
+          <div className="flex items-center space-x-2">
+            <input
+              type="password"
+              value={tempKey}
+              onChange={(e) => setTempKey(e.target.value)}
+              placeholder="Paste AIzaSy... (optional, server default used if empty)"
+              className="flex-1 px-3 py-2 text-xs border border-stone-300 rounded-xl font-mono focus:outline-emerald-600"
+            />
+            <button
+              onClick={handleSaveKey}
+              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl transition flex items-center space-x-1 cursor-pointer"
+            >
+              {savedNotice ? <Check className="w-3.5 h-3.5" /> : null}
+              <span>{savedNotice ? 'Saved!' : 'Save Key'}</span>
+            </button>
+          </div>
+          <p className="text-[11px] text-stone-500 leading-normal">
+            Your key is safely stored locally in your browser and used to power live Gemini 1.5 Flash agronomic answers grounded in your soil parameters and extension citations.
+          </p>
+        </div>
+      )}
 
       {/* Suggested Questions */}
       <div className="flex flex-wrap gap-2">
@@ -106,6 +186,12 @@ export const AskSoilAIPage: React.FC<AskSoilAIPageProps> = ({ analysis }) => {
             </div>
 
             <div className={`space-y-2 max-w-xl ${m.role === 'user' ? 'text-right' : ''}`}>
+              {m.provider && (
+                <div className="text-[10px] font-semibold text-emerald-700 mb-1 flex items-center space-x-1">
+                  <Sparkles className="w-3 h-3" />
+                  <span>{m.provider}</span>
+                </div>
+              )}
               <div
                 className={`inline-block p-4 rounded-2xl text-xs sm:text-sm leading-relaxed ${
                   m.role === 'user'

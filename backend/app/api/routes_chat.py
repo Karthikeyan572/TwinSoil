@@ -1,5 +1,5 @@
 from typing import Optional, List
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Header
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
@@ -7,11 +7,13 @@ from backend.app.database.database import get_db
 from backend.app.database.models import Report, SoilParameterModel, EvidenceModel, AnalysisRun
 from backend.app.rag.retriever import parameter_retriever
 from backend.app.services.llm_service import llm_service
+from backend.app.config import settings
 
 router = APIRouter(prefix="/reports", tags=["chat"])
 
 class QuestionRequest(BaseModel):
     question: str = Field(description="Agronomic question scoped to the report.")
+    gemini_api_key: Optional[str] = Field(default=None, description="Optional Google Gemini API key.")
 
 class SourceCitation(BaseModel):
     source: str
@@ -22,9 +24,15 @@ class QuestionResponse(BaseModel):
     question: str
     answer: str
     citations: List[SourceCitation]
+    provider: str = "gemini"
 
 @router.post("/{report_id}/ask", response_model=QuestionResponse)
-async def ask_soil_ai(report_id: str, request: QuestionRequest, db: Session = Depends(get_db)):
+async def ask_soil_ai(
+    report_id: str,
+    request: QuestionRequest,
+    x_gemini_api_key: Optional[str] = Header(None, alias="X-Gemini-API-Key"),
+    db: Session = Depends(get_db)
+):
     """
     Ask an evidence-backed agronomic question strictly scoped to the report and RAG knowledge base.
     """
@@ -75,10 +83,18 @@ async def ask_soil_ai(report_id: str, request: QuestionRequest, db: Session = De
         f"Answer clearly and cite the sources."
     )
 
+    header_key = x_gemini_api_key if isinstance(x_gemini_api_key, str) and x_gemini_api_key.strip() else None
+    req_key = request.gemini_api_key if isinstance(request.gemini_api_key, str) and request.gemini_api_key.strip() else None
+    env_key = settings.GEMINI_API_KEY if settings.GEMINI_API_KEY and settings.GEMINI_API_KEY.strip() else None
+
+    effective_gemini_key = req_key or header_key or env_key
+    provider_used = "Google Gemini 1.5 Flash" if effective_gemini_key else "SoilTwin Scientific Engine"
+
     answer = llm_service.generate_text(
         prompt=prompt,
         system_prompt=system_prompt,
-        use_strong_model=False
+        use_strong_model=False,
+        gemini_api_key=effective_gemini_key
     )
 
     citations = [
@@ -93,5 +109,6 @@ async def ask_soil_ai(report_id: str, request: QuestionRequest, db: Session = De
     return QuestionResponse(
         question=request.question,
         answer=answer,
-        citations=citations
+        citations=citations,
+        provider=provider_used
     )

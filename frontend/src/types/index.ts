@@ -74,4 +74,5 @@ export interface ChatResponse {
   question: string;
   answer: string;
   citations: ChatCitation[];
+  provider?: string;
 }
