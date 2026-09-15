@@ -12,6 +12,9 @@ class EmbeddingService:
 
     @property
     def model(self):
+        import os
+        if os.getenv("FAST_EMBEDDINGS", "").lower() in ["1", "true", "yes"]:
+            return False
         if self._model is None:
             try:
                 from sentence_transformers import SentenceTransformer

@@ -91,7 +91,7 @@ class VectorStore:
                 param_match_boost = 0.0
                 if parameter_filter and chunk.parameter:
                     if chunk.parameter.lower() == parameter_filter.lower():
-                        param_match_boost = 0.25
+                        param_match_boost = 0.75
 
                 if not chunk.embedding:
                     continue
