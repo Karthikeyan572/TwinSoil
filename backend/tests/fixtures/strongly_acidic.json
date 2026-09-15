@@ -1,0 +1,39 @@
+{
+  "sample_id": "Acidic Pine Plot",
+  "crop_code": "Blueberries",
+  "parameters": [
+    {
+      "name": "pH",
+      "value": 4.2,
+      "unit": null,
+      "reference_min": 6.0,
+      "reference_max": 6.8,
+      "reference_text": "6.0-6.8",
+      "lab_status": "VERY LOW",
+      "computed_status": "BELOW_OPTIMUM",
+      "source_page": 1
+    },
+    {
+      "name": "Al",
+      "value": 115.0,
+      "unit": "ppm",
+      "reference_min": null,
+      "reference_max": 75.0,
+      "reference_text": "<75",
+      "lab_status": "TOXIC / HIGH",
+      "computed_status": "ABOVE_OPTIMUM",
+      "source_page": 1
+    },
+    {
+      "name": "Ca",
+      "value": 250.0,
+      "unit": "ppm",
+      "reference_min": 800.0,
+      "reference_max": 1500.0,
+      "reference_text": "800-1500",
+      "lab_status": "DEFICIENT",
+      "computed_status": "BELOW_OPTIMUM",
+      "source_page": 1
+    }
+  ]
+}

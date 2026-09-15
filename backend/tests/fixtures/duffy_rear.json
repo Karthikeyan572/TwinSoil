@@ -1,0 +1,171 @@
+{
+  "sample_id": "Duffy Rear",
+  "crop_code": "Home Garden / Vegetables",
+  "parameters": [
+    {
+      "name": "pH",
+      "value": 4.5,
+      "unit": null,
+      "reference_min": 6.0,
+      "reference_max": 6.8,
+      "reference_text": "6.0-6.8",
+      "lab_status": "BELOW OPTIMUM",
+      "computed_status": "BELOW_OPTIMUM",
+      "source_page": 1
+    },
+    {
+      "name": "CEC",
+      "value": 9.5,
+      "unit": "meq/100g",
+      "reference_min": 10.0,
+      "reference_max": 20.0,
+      "reference_text": "10-20",
+      "lab_status": "SLIGHTLY LOW",
+      "computed_status": "BELOW_OPTIMUM",
+      "source_page": 1
+    },
+    {
+      "name": "Organic Matter",
+      "value": 1.9,
+      "unit": "%",
+      "reference_min": 3.0,
+      "reference_max": 5.0,
+      "reference_text": "3-5%",
+      "lab_status": "BELOW OPTIMUM",
+      "computed_status": "BELOW_OPTIMUM",
+      "source_page": 1
+    },
+    {
+      "name": "P",
+      "value": 2.3,
+      "unit": "ppm",
+      "reference_min": 4.0,
+      "reference_max": 14.0,
+      "reference_text": "4-14",
+      "lab_status": "DEFICIENT",
+      "computed_status": "BELOW_OPTIMUM",
+      "source_page": 1
+    },
+    {
+      "name": "K",
+      "value": 47.0,
+      "unit": "ppm",
+      "reference_min": 100.0,
+      "reference_max": 160.0,
+      "reference_text": "100-160",
+      "lab_status": "DEFICIENT",
+      "computed_status": "BELOW_OPTIMUM",
+      "source_page": 1
+    },
+    {
+      "name": "Ca",
+      "value": 133.0,
+      "unit": "ppm",
+      "reference_min": 1000.0,
+      "reference_max": 1500.0,
+      "reference_text": "1000-1500",
+      "lab_status": "CRITICALLY LOW",
+      "computed_status": "BELOW_OPTIMUM",
+      "source_page": 1
+    },
+    {
+      "name": "Mg",
+      "value": 21.0,
+      "unit": "ppm",
+      "reference_min": 50.0,
+      "reference_max": 120.0,
+      "reference_text": "50-120",
+      "lab_status": "DEFICIENT",
+      "computed_status": "BELOW_OPTIMUM",
+      "source_page": 1
+    },
+    {
+      "name": "S",
+      "value": 34.4,
+      "unit": "ppm",
+      "reference_min": 10.0,
+      "reference_max": null,
+      "reference_text": ">10",
+      "lab_status": "OPTIMAL",
+      "computed_status": "WITHIN_RANGE",
+      "source_page": 1
+    },
+    {
+      "name": "B",
+      "value": 0.1,
+      "unit": "ppm",
+      "reference_min": 0.1,
+      "reference_max": 0.5,
+      "reference_text": "0.1-0.5",
+      "lab_status": "LOW",
+      "computed_status": "WITHIN_RANGE",
+      "source_page": 1
+    },
+    {
+      "name": "Mn",
+      "value": 4.4,
+      "unit": "ppm",
+      "reference_min": 1.1,
+      "reference_max": 6.3,
+      "reference_text": "1.1-6.3",
+      "lab_status": "OPTIMAL",
+      "computed_status": "WITHIN_RANGE",
+      "source_page": 1
+    },
+    {
+      "name": "Zn",
+      "value": 0.8,
+      "unit": "ppm",
+      "reference_min": 1.0,
+      "reference_max": 7.6,
+      "reference_text": "1.0-7.6",
+      "lab_status": "SLIGHTLY LOW",
+      "computed_status": "BELOW_OPTIMUM",
+      "source_page": 1
+    },
+    {
+      "name": "Cu",
+      "value": 0.4,
+      "unit": "ppm",
+      "reference_min": 0.3,
+      "reference_max": 0.6,
+      "reference_text": "0.3-0.6",
+      "lab_status": "OPTIMAL",
+      "computed_status": "WITHIN_RANGE",
+      "source_page": 1
+    },
+    {
+      "name": "Fe",
+      "value": 81.9,
+      "unit": "ppm",
+      "reference_min": 2.7,
+      "reference_max": 9.4,
+      "reference_text": "2.7-9.4",
+      "lab_status": "ELEVATED",
+      "computed_status": "ABOVE_OPTIMUM",
+      "source_page": 1
+    },
+    {
+      "name": "Al",
+      "value": 94.0,
+      "unit": "ppm",
+      "reference_min": null,
+      "reference_max": 75.0,
+      "reference_text": "<75",
+      "lab_status": "HIGH",
+      "computed_status": "ABOVE_OPTIMUM",
+      "source_page": 1
+    },
+    {
+      "name": "Pb",
+      "value": 1.3,
+      "unit": "ppm",
+      "reference_min": null,
+      "reference_max": 22.0,
+      "reference_text": "<22",
+      "lab_status": "LOW/SAFE",
+      "computed_status": "WITHIN_RANGE",
+      "source_page": 1
+    }
+  ]
+}

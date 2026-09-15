@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: soiltwin-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: soiltwin_user
+      POSTGRES_PASSWORD: soiltwin_password
+      POSTGRES_DB: soiltwin_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U soiltwin_user -d soiltwin_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: soiltwin-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql+psycopg2://soiltwin_user:soiltwin_password@postgres:5432/soiltwin_db
+      - LLM_PROVIDER=mock
+      - FAST_MODEL=gpt-4o-mini
+      - STRONG_MODEL=gpt-4o
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/uploads:/app/backend/uploads
+      - ./backend/models:/app/backend/models
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: soiltwin-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:

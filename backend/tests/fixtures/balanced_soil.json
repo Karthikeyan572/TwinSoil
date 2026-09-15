@@ -1,0 +1,61 @@
+{
+  "sample_id": "Balanced Field 1",
+  "crop_code": "Corn / Maize",
+  "parameters": [
+    {
+      "name": "pH",
+      "value": 6.5,
+      "unit": null,
+      "reference_min": 6.0,
+      "reference_max": 7.0,
+      "reference_text": "6.0-7.0",
+      "lab_status": "OPTIMAL",
+      "computed_status": "WITHIN_RANGE",
+      "source_page": 1
+    },
+    {
+      "name": "Organic Matter",
+      "value": 3.8,
+      "unit": "%",
+      "reference_min": 3.0,
+      "reference_max": 5.0,
+      "reference_text": "3-5%",
+      "lab_status": "OPTIMAL",
+      "computed_status": "WITHIN_RANGE",
+      "source_page": 1
+    },
+    {
+      "name": "N",
+      "value": 45.0,
+      "unit": "ppm",
+      "reference_min": 30.0,
+      "reference_max": 60.0,
+      "reference_text": "30-60",
+      "lab_status": "OPTIMAL",
+      "computed_status": "WITHIN_RANGE",
+      "source_page": 1
+    },
+    {
+      "name": "P",
+      "value": 25.0,
+      "unit": "ppm",
+      "reference_min": 20.0,
+      "reference_max": 40.0,
+      "reference_text": "20-40",
+      "lab_status": "OPTIMAL",
+      "computed_status": "WITHIN_RANGE",
+      "source_page": 1
+    },
+    {
+      "name": "K",
+      "value": 140.0,
+      "unit": "ppm",
+      "reference_min": 120.0,
+      "reference_max": 180.0,
+      "reference_text": "120-180",
+      "lab_status": "OPTIMAL",
+      "computed_status": "WITHIN_RANGE",
+      "source_page": 1
+    }
+  ]
+}

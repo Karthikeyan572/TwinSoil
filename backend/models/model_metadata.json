@@ -1,0 +1,47 @@
+{
+  "model_name": "ExtraTreesClassifier",
+  "dataset": "Kaggle Crop Recommendation Dataset (atharvaingle/crop-recommendation-dataset)",
+  "features": [
+    "N",
+    "P",
+    "K",
+    "temperature",
+    "humidity",
+    "ph",
+    "rainfall"
+  ],
+  "classes": [
+    "apple",
+    "banana",
+    "blackgram",
+    "chickpea",
+    "coconut",
+    "coffee",
+    "cotton",
+    "grapes",
+    "jute",
+    "kidneybeans",
+    "lentil",
+    "maize",
+    "mango",
+    "mothbeans",
+    "mungbean",
+    "muskmelon",
+    "orange",
+    "papaya",
+    "pigeonpeas",
+    "pomegranate",
+    "rice",
+    "watermelon"
+  ],
+  "classes_count": 22,
+  "validation_metrics": {
+    "accuracy": 0.9864,
+    "macro_f1": 0.9864,
+    "weighted_f1": 0.9864,
+    "macro_precision": 0.9867,
+    "macro_recall": 0.9864
+  },
+  "training_timestamp": "2026-09-15T06:32:09.225675",
+  "version": "1.0.0"
+}

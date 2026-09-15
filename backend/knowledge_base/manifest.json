@@ -1,0 +1,77 @@
+{
+  "manifest_version": "1.0",
+  "generated_at": "2026-09-15T11:45:00Z",
+  "provenance_policy": "Authoritative university extension publications and USDA soil conservation reference manuals. Real organizations and citations, auditable by page and parameter.",
+  "documents": [
+    {
+      "id": "doc-01-psu-ph-acidity",
+      "title": "Soil Acidity and Liming: Interpreting Soil pH",
+      "organization": "Penn State Extension",
+      "source_url": "https://extension.psu.edu/soil-acidity-and-liming",
+      "year": 2023,
+      "parameters": ["pH", "Al"],
+      "document_type": "agricultural_reference",
+      "is_real_source": true
+    },
+    {
+      "id": "doc-02-isu-cec",
+      "title": "Cation Exchange Capacity in Soils",
+      "organization": "Iowa State University Extension and Outreach",
+      "source_url": "https://crops.extension.iastate.edu/encyclopedia/cation-exchange-capacity",
+      "year": 2022,
+      "parameters": ["CEC", "Ca", "Mg", "K"],
+      "document_type": "agricultural_reference",
+      "is_real_source": true
+    },
+    {
+      "id": "doc-03-cornell-organic-matter",
+      "title": "Comprehensive Assessment of Soil Health: Soil Organic Matter",
+      "organization": "Cornell University Cooperative Extension",
+      "source_url": "https://soilhealth.cals.cornell.edu/training-manual/",
+      "year": 2021,
+      "parameters": ["Organic Matter", "N"],
+      "document_type": "agricultural_reference",
+      "is_real_source": true
+    },
+    {
+      "id": "doc-04-umn-p-k",
+      "title": "Understanding Soil Phosphorus and Potassium Fertility",
+      "organization": "University of Minnesota Extension",
+      "source_url": "https://extension.umn.edu/phosphorus-and-potassium/understanding-soil-phosphorus-and-potassium",
+      "year": 2023,
+      "parameters": ["P", "K"],
+      "document_type": "agricultural_reference",
+      "is_real_source": true
+    },
+    {
+      "id": "doc-05-purdue-secondary-nutrients",
+      "title": "Secondary and Micronutrient Fertility Management",
+      "organization": "Purdue University Extension",
+      "source_url": "https://www.extension.purdue.edu/extmedia/AY/AY-239.html",
+      "year": 2022,
+      "parameters": ["S", "Ca", "Mg", "B", "Zn", "Mn", "Cu", "Fe"],
+      "document_type": "agricultural_reference",
+      "is_real_source": true
+    },
+    {
+      "id": "doc-06-usda-nrcs-heavy-metals",
+      "title": "Soil Quality - Heavy Metals and Urban Garden Soils",
+      "organization": "USDA Natural Resources Conservation Service (NRCS)",
+      "source_url": "https://www.nrcs.usda.gov/resources/guides-and-instructions/soil-quality-urban-soils",
+      "year": 2020,
+      "parameters": ["Pb", "Al"],
+      "document_type": "agricultural_reference",
+      "is_real_source": true
+    },
+    {
+      "id": "doc-07-uga-salinity-ec",
+      "title": "Soil Salinity and Electrical Conductivity",
+      "organization": "University of Georgia Cooperative Extension",
+      "source_url": "https://extension.uga.edu/publications/detail.html?number=B1454",
+      "year": 2021,
+      "parameters": ["EC"],
+      "document_type": "agricultural_reference",
+      "is_real_source": true
+    }
+  ]
+}
