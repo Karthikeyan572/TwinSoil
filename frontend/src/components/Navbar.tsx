@@ -85,7 +85,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   }`}
                 >
                   <Layers className="w-4 h-4" />
-                  <span>Crop ML</span>
+                  <span>Crop Recommendation</span>
                 </button>
 
                 <button

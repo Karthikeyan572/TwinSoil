@@ -2,11 +2,13 @@ import shutil
 from pathlib import Path
 from typing import Optional, Dict, Any, List
 from fastapi import APIRouter, UploadFile, File, HTTPException, Depends
+from fastapi.responses import Response
 from sqlalchemy.orm import Session
 
 from backend.app.database.database import get_db, SessionLocal
 from backend.app.database.models import Report, SoilParameterModel, AnalysisRun, EvidenceModel
 from backend.app.services.storage_service import storage_service
+from backend.app.services.report_generator import build_final_analysis_object, generate_final_report_pdf
 from backend.app.agents.supervisor import supervisor_agent
 from backend.app.config import settings
 
@@ -253,3 +255,42 @@ async def load_demo_duffy_rear(db: Session = Depends(get_db)):
         **final_output,
         "pipeline_steps": workflow_result.get("pipeline_steps", [])
     }
+
+
+@router.get("/{report_id}/final-analysis")
+async def get_final_analysis(report_id: str, db: Session = Depends(get_db)):
+    """
+    Module 7: Structured final analysis object as single source of truth.
+    """
+    try:
+        data = build_final_analysis_object(report_id, db)
+        return data
+    except ValueError as ve:
+        raise HTTPException(status_code=404, detail=str(ve))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to compile final analysis: {str(e)}")
+
+
+@router.get("/{report_id}/pdf")
+async def download_report_pdf(report_id: str, db: Session = Depends(get_db)):
+    """
+    Module 9: Generates real structured PDF download via ReportLab.
+    """
+    try:
+        data = build_final_analysis_object(report_id, db)
+        pdf_bytes = generate_final_report_pdf(data)
+        date_str = data.get("report_metadata", {}).get("date", "report").replace(" ", "_").replace(",", "")
+        filename = f"SoilTwin_Report_{report_id[:8]}_{date_str}.pdf"
+        
+        return Response(
+            content=pdf_bytes,
+            media_type="application/pdf",
+            headers={
+                "Content-Disposition": f'attachment; filename="{filename}"',
+                "Content-Length": str(len(pdf_bytes))
+            }
+        )
+    except ValueError as ve:
+        raise HTTPException(status_code=404, detail=str(ve))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to generate report PDF: {str(e)}")

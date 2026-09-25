@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { UploadCloud, FileCheck, AlertCircle, Loader2 } from 'lucide-react';
 import { api } from '../services/api';
 import { ReportAnalysis } from '../types';
-import { PipelineVisualization } from '../components/PipelineVisualization';
 
 interface UploadPageProps {
   onAnalysisComplete: (analysis: ReportAnalysis) => void;
@@ -154,7 +153,7 @@ export const UploadPage: React.FC<UploadPageProps> = ({ onAnalysisComplete }) =>
             ) : analyzing ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Analyzing Pipeline...</span>
+                <span>Analyzing your soil report...</span>
               </>
             ) : (
               <span>Analyze Report</span>
@@ -163,10 +162,14 @@ export const UploadPage: React.FC<UploadPageProps> = ({ onAnalysisComplete }) =>
         </div>
       )}
 
-      {/* Pipeline Status if Analyzing */}
+      {/* Analysis Loading Status */}
       {analyzing && (
-        <div className="animate-in fade-in duration-300">
-          <PipelineVisualization isProcessing={true} />
+        <div className="bg-white border border-stone-200 rounded-3xl p-8 text-center space-y-4 shadow-xs animate-in fade-in duration-300">
+          <Loader2 className="w-8 h-8 animate-spin text-emerald-600 mx-auto" />
+          <div className="space-y-1">
+            <h3 className="text-base font-bold text-stone-900">Analyzing your soil report...</h3>
+            <p className="text-xs text-stone-500">Extracting measurements and preparing your soil health assessment.</p>
+          </div>
         </div>
       )}
     </div>

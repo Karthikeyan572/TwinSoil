@@ -82,7 +82,7 @@ export const ParameterModal: React.FC<ParameterModalProps> = ({ parameter, onClo
               <ShieldCheck className="w-4 h-4 text-emerald-600" />
               <span>Scientific Confidence Level: <b>{parameter.confidence || 'HIGH'}</b></span>
             </div>
-            <span className="text-stone-500">Critic Agent: Verified</span>
+            <span className="text-stone-600 font-medium">Agronomic Review: Verified</span>
           </div>
 
           {/* Evidence Drawer */}

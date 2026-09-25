@@ -25,7 +25,7 @@ export const AskSoilAIPage: React.FC<AskSoilAIPageProps> = ({ analysis }) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: `Hello! I am SoilTwin AI powered by Google Gemini and authoritative university extension RAG. I have analyzed your report (ID: ${analysis.report_id}). You can ask me any agronomic questions regarding your measured parameters, nutrient deficiencies, pH levels, or soil amendments.`,
+      content: `Hello! I am SoilTwin AI. I have analyzed your soil report (ID: ${analysis.report_id}). You can ask me any agronomic questions regarding your measured parameters, nutrient deficiencies, pH levels, or soil amendments.`,
       provider: geminiApiKey ? 'Google Gemini 1.5 Flash' : 'SoilTwin Scientific Engine',
     },
   ]);
@@ -236,7 +236,7 @@ export const AskSoilAIPage: React.FC<AskSoilAIPageProps> = ({ analysis }) => {
             </div>
             <div className="flex items-center space-x-2 bg-stone-50 border border-stone-200 p-3 rounded-2xl">
               <Loader2 className="w-4 h-4 animate-spin text-emerald-600" />
-              <span>Retrieving extension citations &amp; formulating response...</span>
+              <span>Preparing your answer...</span>
             </div>
           </div>
         )}

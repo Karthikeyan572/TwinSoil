@@ -20,7 +20,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         <div className="max-w-3xl relative z-10 space-y-6">
           <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-semibold tracking-wide uppercase">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Agentic Agricultural Intelligence</span>
+            <span>Agricultural Intelligence &amp; Soil Analysis</span>
           </div>
 
           <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight leading-tight">
@@ -30,7 +30,7 @@ export const HomePage: React.FC<HomePageProps> = ({
 
           <p className="text-stone-300 text-base sm:text-lg leading-relaxed max-w-2xl">
             Upload any soil-test report (PDF or image). SoilTwin AI extracts every scientifically relevant measurement,
-            validates numbers deterministically, cites university extension literature, and runs a trained ML model for crop suitability.
+            validates numbers deterministically against laboratory ranges, cites university extension literature, and provides reliable crop recommendations.
           </p>
 
           <div className="flex flex-wrap gap-4 pt-4">
@@ -63,20 +63,20 @@ export const HomePage: React.FC<HomePageProps> = ({
             </div>
             <div className="flex items-center space-x-1.5">
               <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-              <span>Real Scikit-Learn ML Classifier</span>
+              <span>Audited Crop Suitability Recommendations</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* How It Works - 3 Layer Mental Model */}
+      {/* Agricultural Capabilities */}
       <section className="space-y-8">
         <div className="text-center max-w-2xl mx-auto space-y-2">
           <h2 className="text-2xl sm:text-3xl font-bold text-stone-900">
-            The Three-Layer Agricultural Architecture
+            Evidence-Grounded Agricultural Decision Support
           </h2>
           <p className="text-sm text-stone-600">
-            Built as a genuine scientific intelligence system — not a PDF uploader wrapped around a chatbot.
+            A reliable scientific intelligence platform designed for growers, agronomists, and agricultural advisors.
           </p>
         </div>
 
@@ -85,9 +85,9 @@ export const HomePage: React.FC<HomePageProps> = ({
             <div className="w-12 h-12 rounded-2xl bg-emerald-100 flex items-center justify-center text-emerald-700 mb-4">
               <Cpu className="w-6 h-6" />
             </div>
-            <h3 className="font-bold text-lg text-stone-900 mb-2">1. Agentic AI</h3>
+            <h3 className="font-bold text-lg text-stone-900 mb-2">1. Accurate Lab Extraction</h3>
             <p className="text-xs text-stone-600 leading-relaxed">
-              Supervisor, Parser, Retrieval, Interpreter, Critic, and Crop agents orchestrated via LangGraph with bounded retries (Max Retries = 2) and deterministic numerical validation.
+              Extracts soil macronutrients, micronutrients, pH, and cation exchange capacity directly from your laboratory test report, deterministically validating each parameter against optimal agronomic ranges.
             </p>
           </div>
 
@@ -95,9 +95,9 @@ export const HomePage: React.FC<HomePageProps> = ({
             <div className="w-12 h-12 rounded-2xl bg-sky-100 flex items-center justify-center text-sky-700 mb-4">
               <BookOpen className="w-6 h-6" />
             </div>
-            <h3 className="font-bold text-lg text-stone-900 mb-2">2. Grounded RAG</h3>
+            <h3 className="font-bold text-lg text-stone-900 mb-2">2. University Extension Science</h3>
             <p className="text-xs text-stone-600 leading-relaxed">
-              Provides the knowledge foundation using all-MiniLM-L6-v2 embeddings and vector search across Penn State, Cornell, USDA NRCS, and Purdue Extension publications with exact page citations.
+              Every soil interpretation, deficiency alert, and soil management principle is grounded in published agricultural research from Penn State, Cornell, Iowa State, UMN, and USDA NRCS reference manuals.
             </p>
           </div>
 
@@ -105,9 +105,9 @@ export const HomePage: React.FC<HomePageProps> = ({
             <div className="w-12 h-12 rounded-2xl bg-amber-100 flex items-center justify-center text-amber-700 mb-4">
               <Shield className="w-6 h-6" />
             </div>
-            <h3 className="font-bold text-lg text-stone-900 mb-2">3. LLM Optimization & ML</h3>
+            <h3 className="font-bold text-lg text-stone-900 mb-2">3. Crop Suitability Guidance</h3>
             <p className="text-xs text-stone-600 leading-relaxed">
-              Adaptive retrieval, context compression, model routing, caching, and an audited scikit-learn classifier for crop suitability that refuses to guess missing weather variables.
+              Evaluates crop suitability across 22 field and specialty crops by combining your verified soil nutrients with measured environmental growing conditions.
             </p>
           </div>
         </div>

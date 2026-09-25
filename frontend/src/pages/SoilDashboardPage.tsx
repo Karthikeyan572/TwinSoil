@@ -9,12 +9,13 @@ import {
   CartesianGrid,
   Legend,
 } from 'recharts';
-import { AlertCircle, CheckCircle2, FileText, Info } from 'lucide-react';
+import { AlertCircle, CheckCircle2, FileText, Info, Download, Loader2 } from 'lucide-react';
 import { ReportAnalysis, SoilParameter } from '../types';
 import { StatusBadge } from '../components/StatusBadge';
 import { ParameterCard } from '../components/ParameterCard';
 import { ParameterModal } from '../components/ParameterModal';
-import { PipelineVisualization } from '../components/PipelineVisualization';
+import { FinalReportModal } from '../components/FinalReportModal';
+import { api } from '../services/api';
 
 interface SoilDashboardPageProps {
   analysis: ReportAnalysis;
@@ -22,8 +23,19 @@ interface SoilDashboardPageProps {
 
 export const SoilDashboardPage: React.FC<SoilDashboardPageProps> = ({ analysis }) => {
   const [selectedParam, setSelectedParam] = useState<SoilParameter | null>(null);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [pdfDownloading, setPdfDownloading] = useState(false);
 
   const { summary, parameters = [], pipeline_steps = [] } = analysis;
+
+  const handleDownloadPdf = async () => {
+    setPdfDownloading(true);
+    try {
+      await api.downloadReportPdf(analysis.report_id);
+    } finally {
+      setPdfDownloading(false);
+    }
+  };
 
   // Prepare chart data for parameters with numeric values and ranges
   const chartData = parameters
@@ -50,9 +62,36 @@ export const SoilDashboardPage: React.FC<SoilDashboardPageProps> = ({ analysis }
               Report ID: <code className="bg-stone-100 px-2 py-0.5 rounded text-stone-700 font-mono">{analysis.report_id}</code>
             </p>
           </div>
-          <div className="text-right">
-            <span className="text-xs font-semibold uppercase tracking-wider text-stone-400">Total Analyzed</span>
-            <div className="text-xl font-extrabold text-stone-900">{parameters.length} Parameters</div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              onClick={() => setShowReportModal(true)}
+              className="inline-flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white transition shadow-xs cursor-pointer"
+            >
+              <FileText className="w-3.5 h-3.5" />
+              <span>View Final Report</span>
+            </button>
+            <button
+              onClick={handleDownloadPdf}
+              disabled={pdfDownloading}
+              className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-stone-900 hover:bg-stone-800 text-white transition shadow-xs cursor-pointer disabled:opacity-50"
+            >
+              {pdfDownloading ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <span>Downloading...</span>
+                </>
+              ) : (
+                <>
+                  <Download className="w-3.5 h-3.5" />
+                  <span>Download PDF</span>
+                </>
+              )}
+            </button>
+            <div className="hidden lg:block border-l border-stone-200 pl-3 text-right">
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-stone-400 block">Total Analyzed</span>
+              <span className="text-sm font-extrabold text-stone-900">{parameters.length} Parameters</span>
+            </div>
           </div>
         </div>
 
@@ -128,15 +167,16 @@ export const SoilDashboardPage: React.FC<SoilDashboardPageProps> = ({ analysis }
         </div>
       </div>
 
-      {/* Pipeline Checklist Observability */}
-      {pipeline_steps && pipeline_steps.length > 0 && (
-        <div className="mt-8">
-          <PipelineVisualization steps={pipeline_steps} />
-        </div>
-      )}
-
       {/* Parameter Detail Modal */}
       <ParameterModal parameter={selectedParam} onClose={() => setSelectedParam(null)} />
+
+      {/* Document-Style Final Report Viewer Modal */}
+      {showReportModal && (
+        <FinalReportModal
+          analysis={analysis}
+          onClose={() => setShowReportModal(false)}
+        />
+      )}
     </div>
   );
 };

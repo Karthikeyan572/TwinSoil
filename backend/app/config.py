@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     LLM_PROVIDER: str = os.getenv("LLM_PROVIDER", "mock")
     OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
+    OPENWEATHER_API_KEY: str = os.getenv("OPENWEATHER_API_KEY", "")
     
     # Model routing
     FAST_MODEL: str = os.getenv("FAST_MODEL", "gemini-1.5-flash" if os.getenv("LLM_PROVIDER") == "gemini" else "gpt-4o-mini")

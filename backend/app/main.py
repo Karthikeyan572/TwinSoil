@@ -11,6 +11,7 @@ from backend.app.database.database import init_db
 from backend.app.api.routes_reports import router as reports_router
 from backend.app.api.routes_chat import router as chat_router
 from backend.app.api.routes_crops import router as crops_router
+from backend.app.api.routes_weather import router as weather_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -38,6 +39,7 @@ app.add_middleware(
 app.include_router(reports_router, prefix=settings.API_V1_PREFIX)
 app.include_router(chat_router, prefix=settings.API_V1_PREFIX)
 app.include_router(crops_router, prefix=settings.API_V1_PREFIX)
+app.include_router(weather_router, prefix=settings.API_V1_PREFIX)
 
 @app.get("/api/health", tags=["system"])
 async def health_check():

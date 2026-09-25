@@ -91,7 +91,7 @@ export const App: React.FC = () => {
               <span>Zero-Fabrication Guarantee</span>
             </span>
             <span>·</span>
-            <span>LangGraph + PyMuPDF + RAG + Scikit-Learn</span>
+            <span>Evidence-Grounded Agricultural Decision Support</span>
           </div>
         </div>
       </footer>
